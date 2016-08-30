@@ -1,0 +1,66 @@
+<div style="margin-bottom: 7px;" class="text-center">
+	{%= frappe.boot.letter_heads[frappe.defaults.get_default("letter_head")] %}
+</div>
+
+
+<h3 class="text-center">
+	{%= __(" STATEMENT OF ACCOUNTS AS AT") %}
+	{%= dateutil.str_to_user(filters.report_date) %}
+</h3>
+<h4 class="text-center">{%= filters.customer %} </h4>
+<hr>
+<table class="table table-bordered">
+	<thead>
+		<tr>
+			<th style="width: 15%">{%= __("Document Date") %}</th>
+			<th style="width: 15%">{%= __("Document") %}</th>
+			<th style="width: 15%">{%= __("Document No.") %}</th>
+			<th style="width: 20%">{%= __("Customer's Contact Person") %}</th>
+			<th style="width: 15%">{%= __("Payment Term") %}</th>
+			<th style="width: 10%">{%= __("Days Overdue") %}</th>
+			<th style="width: 10%">{%= __("Amount(SGD)") %}</th>
+		</tr>
+	</thead>
+	<tbody>
+		{% for(var i=0, l=data.length; i<l; i++) { %}
+			<tr>
+				<td>{%= data[i][__("Document Date")] %}</td>
+				<td>{%= data[i][__("Document")] %}</td>
+				<td>{%= data[i][__("Document No.")] %}</td>
+				<td>{%= data[i][__("Customer's Contact Person")] %}</td>
+				<td>{%= data[i][__("Payment Term")] %}</td>
+				<td>{%= data[i][__("Days Overdue")] %}</td>
+				<td style="text-align: right">{%= format_currency(data[i][__("Amount(SGD)")], data[i]["currency"]) %}</td>
+			</tr>
+		{% } %}
+	</tbody>
+</table>
+<br/><br/><br/><br/>
+<p class="text-left">Aging Analysis:</p>
+<table class="table table-bordered">
+	<thead>
+		<tr>
+			<th style="width: 20%">{%= __("0 - " + filters.range1 +" Days") %}</th>
+			<th style="width: 20%">{%= __(filters.range1 + " - " + filters.range2 + " Days") %}</th>
+			<th style="width: 20%">{%= __(filters.range2 + " - " + filters.range3 + " Days") %}</th>
+			<th style="width: 20%">{%= __("Over " + filters.range3 + " Days") %}</th>
+			<th style="width: 20%">{%= __("Total Outstanding Balance") %}</th>
+		</tr>
+	</thead>
+	<tbody>
+		{% for(var i=l-1, l=data.length; i<l; i++) { %}
+			<tr>
+				<td style="text-align: right">{%= format_currency(data[i][__("0 - " + filters.range1 +" Days")], data[i]["currency"]) %}</td>
+				<td style="text-align: right">{%= format_currency(data[i][__(filters.range1 + " - " + filters.range2 + " Days")], data[i]["currency"]) %}</td>
+				<td style="text-align: right">{%= format_currency(data[i][__(filters.range2 + " - " + filters.range3 + " Days")], data[i]["currency"]) %}</td>
+				<td style="text-align: right">{%= format_currency(data[i][__("Over " + filters.range3 + " Days")], data[i]["currency"]) %}</td>
+				<td style="text-align: right">{%= format_currency(data[i][__("Total Outstanding Balance")], data[i]["currency"]) %}</td>
+			</tr>
+		{% } %}
+	</tbody>
+</table>
+<br/><br/><br/><br/>
+<p class="text-left">1. Please settle any overdue items immediately to avoid an interest charge or discontinuation of supplies to you. If payment has been made, please ignore this reminder.</p>
+<p class="text-left">2. Please contact us immediately if there are any discrepancies in this statement.</p>
+<br/><br/><br/>
+<p class="text-left text-muted">This is a computer-generated statement. No signature is required.</p>

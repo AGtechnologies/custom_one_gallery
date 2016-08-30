@@ -1,0 +1,18 @@
+include MANIFEST.in
+include requirements.txt
+include *.json
+include *.md
+include *.py
+include *.txt
+recursive-include custom_one_gallery *.css
+recursive-include custom_one_gallery *.csv
+recursive-include custom_one_gallery *.html
+recursive-include custom_one_gallery *.ico
+recursive-include custom_one_gallery *.js
+recursive-include custom_one_gallery *.json
+recursive-include custom_one_gallery *.md
+recursive-include custom_one_gallery *.png
+recursive-include custom_one_gallery *.py
+recursive-include custom_one_gallery *.svg
+recursive-include custom_one_gallery *.txt
+recursive-exclude custom_one_gallery *.pyc

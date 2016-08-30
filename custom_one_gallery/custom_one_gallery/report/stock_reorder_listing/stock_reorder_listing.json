@@ -1,0 +1,17 @@
+{
+ "add_total_row": 1, 
+ "apply_user_permissions": 1, 
+ "creation": "2016-08-29 11:11:13", 
+ "docstatus": 0, 
+ "doctype": "Report", 
+ "idx": 1, 
+ "is_standard": "Yes", 
+ "modified": "2016-08-29 11:28:16.907658", 
+ "modified_by": "Administrator", 
+ "module": "Custom One Gallery", 
+ "name": "Stock Reorder Listing", 
+ "owner": "Administrator", 
+ "ref_doctype": "Item", 
+ "report_name": "Stock Reorder Listing", 
+ "report_type": "Script Report"
+}
