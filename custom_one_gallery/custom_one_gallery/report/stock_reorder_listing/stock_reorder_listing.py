@@ -11,9 +11,9 @@ from frappe.utils import flt, getdate, today
 def execute(filters=None):
 	if not filters: filters = {}
 
-	condition,months=get_condition(filters)
+	condition,months,item_condition=get_condition(filters)
 	columns = get_columns()
-	items = get_item_info()
+	items = get_item_info(item_condition)
 
 	total_no_months = 6
 	scrap_quantity = 0
@@ -46,18 +46,19 @@ def execute(filters=None):
 
 	return columns ,data
 
-def get_item_info():
+def get_item_info(item_condition):
+	if item_condition:
+		query="select name, item_name from tabItem where %s" % item_condition
+		#frappe.throw(repr(query))
+		return frappe.db.sql(query, as_dict=1)
+
 	return frappe.db.sql("select name, item_name from tabItem", as_dict=1)
 
 def get_scrap_quantity(condition, item_name):
 	condition+=" and it.item_name ='%s'" %item_name
 	so_items = frappe.db.sql("""select bi.actual_qty
-<<<<<<< HEAD
 		from `tabBin` bi, `tabWarehouse` wh, `tabItem' it
 		where wh.name = bi.warehouse and bi.item_code = it.name and wh.warehouse_name='Warehouse- Scrap' %s""" % (condition), as_dict=1)
-=======
-		from `tabBin` bi, `tabWarehouse` wh, `tabItem` it where wh.name = bi.warehouse and bi.item_code = it.name and wh.warehouse_name='Warehouse- Scrap' %s""" % (condition), as_dict=1)
->>>>>>> origin/master
 	return so_items[0].actual_qty
 
 # def get_warehouse_transit(condition, item_name):
@@ -83,6 +84,7 @@ def get_columns():
 
 def get_condition(filters):
 	conditions = ""
+	item_condition=""
 	months={}
 	if filters.get("to_date"):
 		to_date=filters.get("to_date")[0:7] + "-01"
@@ -104,8 +106,9 @@ def get_condition(filters):
 	else:
 		frappe.throw(_("From and To dates required"))
 
-	# if filters.get("item"):
-	# 	conditions += " and so_item.item_code = '%s'" % filters["item"]
-	#frappe.throw(repr(months))
+	if filters.get("item"):
+		item_condition += " item_code = '%s'" % filters["item"]
+	
+		#frappe.throw(repr(item_condition))
 
-	return conditions,months
+	return conditions,months,item_condition

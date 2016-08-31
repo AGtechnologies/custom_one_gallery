@@ -9,12 +9,7 @@ frappe.query_reports["Stock Reorder Listing"] = {
 			"fieldtype": "Link",
 			"options": "Item"
 		},
-		{
-			"fieldname":"item_code",
-			"label": __("Item Code"),
-			"fieldtype": "Link",
-			"options": "Item Code"
-		},
+		
 		{
 			"fieldname":"to_date",
 			"label": __("To Date"),
