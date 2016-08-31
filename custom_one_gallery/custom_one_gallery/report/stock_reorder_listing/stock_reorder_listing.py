@@ -25,7 +25,7 @@ def execute(filters=None):
 		lmonths=months
 
 		so_items_map=get_sales_items(condition,item.name)
-		scrap_quantity=get_scrap_quantity(condition,item.name)
+		#scrap_quantity=get_scrap_quantity(condition,item.name)
 		for so_items in so_items_map:
 			mon=int(str(so_items.transaction_date)[5:7])
 			monqty=lmonths.get(mon,0) + so_items.so_qty
