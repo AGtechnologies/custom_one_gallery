@@ -22,9 +22,9 @@ def execute(filters=None):
 	data = []
 	for item in items:
 		
-		lmonths=months
+		lmonths=months.copy()
 
-		so_items_map=get_sales_items(condition,item.name)
+		so_items_map=get_sales_items(condition,item.item_name)
 		#scrap_quantity=get_scrap_quantity(condition,item.name)
 		for so_items in so_items_map:
 			mon=int(str(so_items.transaction_date)[5:7])
@@ -38,12 +38,12 @@ def execute(filters=None):
 			iqty=lmonths.get(i,0)
 			total_sales_quantity+=iqty
 			datalist.append(iqty)
-		#frappe.throw(repr(lmonths))
+		
 		avg_sales_quantity = float(total_sales_quantity)/total_no_months
 		reorder_quantity = scrap_quantity + avg_sales_quantity - warehouse_bal_quantity - warehouse_in_transit
 		datalist+=[total_sales_quantity, total_no_months, avg_sales_quantity, scrap_quantity, warehouse_bal_quantity, warehouse_in_transit, reorder_quantity]
 		data.append(datalist)
-
+	#frappe.throw(repr(data))
 	return columns ,data
 
 def get_item_info(item_condition):
@@ -70,9 +70,12 @@ def get_scrap_quantity(condition, item_name):
 
 def get_sales_items(condition, item_name):
 	condition+=" and so_item.item_name ='%s'" %item_name
-	so_items = frappe.db.sql("""select so_item.item_name, so.transaction_date, sum(so_item.qty) as so_qty
+	query="""select so_item.item_name, so.transaction_date, sum(so_item.qty) as so_qty
 		from `tabSales Order` so, `tabSales Order Item` so_item
-		where so.name = so_item.parent %s group by so.transaction_date""" % (condition), as_dict=1)
+		where so.name = so_item.parent %s group by so.transaction_date""" % (condition)
+	#frappe.throw(query)
+	so_items = frappe.db.sql(query, as_dict=1)
+	#frappe.throw(repr(so_items))
 	return so_items
 
 
@@ -92,8 +95,8 @@ def get_condition(filters):
 		from_da= to_da - timedelta(6*365/12)
 		
 		from_date=from_da.strftime('%Y-%m-%d')
-		
-		conditions += " and so.transaction_date between '%s' and '%s'" % (from_date,to_date)
+		#frappe.throw(repr(filters.get("to_date")))
+		conditions += " and so.transaction_date >= '%s' and so.transaction_date <= '%s'" % (from_date,to_date)
 		#frappe.throw(conditions)
 		flag=""
 		while(from_da<to_da):
@@ -108,7 +111,7 @@ def get_condition(filters):
 
 	if filters.get("item"):
 		item_condition += " item_code = '%s'" % filters["item"]
-	
+
 		#frappe.throw(repr(item_condition))
 
 	return conditions,months,item_condition
