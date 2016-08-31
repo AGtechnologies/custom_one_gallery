@@ -52,8 +52,12 @@ def get_item_info():
 def get_scrap_quantity(condition, item_name):
 	condition+=" and it.item_name ='%s'" %item_name
 	so_items = frappe.db.sql("""select bi.actual_qty
+<<<<<<< HEAD
 		from `tabBin` bi, `tabWarehouse` wh, `tabItem' it
 		where wh.name = bi.warehouse and bi.item_code = it.name and wh.warehouse_name='Warehouse- Scrap' %s""" % (condition), as_dict=1)
+=======
+		from `tabBin` bi, `tabWarehouse` wh, `tabItem` it where wh.name = bi.warehouse and bi.item_code = it.name and wh.warehouse_name='Warehouse- Scrap' %s""" % (condition), as_dict=1)
+>>>>>>> origin/master
 	return so_items[0].actual_qty
 
 # def get_warehouse_transit(condition, item_name):
