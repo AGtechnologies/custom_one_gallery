@@ -15,23 +15,29 @@ def execute(filters=None):
 	columns = get_columns()
 	items = get_item_info(item_condition)
 
-	total_no_months = 6
-	scrap_quantity = 0
-	warehouse_bal_quantity = 0
-	warehouse_in_transit = 0
+	
 	data = []
 	for item in items:
 		
-		lmonths=months.copy()
-
-		so_items_map=get_sales_items(condition,item.item_name)
+		lmonths={0:0,1:0,2:0,3:0,4:0,5:0}
+		no_months = 0
+		scrap_quantity = 0
+		warehouse_bal_quantity = 0
+		warehouse_in_transit = 0
+		avg_sales_quantity=0
 		scrap_quantity=get_scrap_quantity(condition,item.item_name)
-		warehouse_in_transit=get_warehouse_transit(condition,item.item_name)
+		warehouse_in_transit=get_warehouse_transit(condition ,item.item_name)
 		warehouse_bal_quantity=get_stock_balance(condition,item.item_name)
-		for so_items in so_items_map:
-			mon=int(str(so_items.transaction_date)[5:7])
-			monqty=lmonths.get(mon,0) + so_items.so_qty
-			lmonths.update({mon:monqty})
+	
+		for mon in months:
+			localcondition=condition + " and so.transaction_date >= '%s' and so.transaction_date <= '%s'" % (mon.get('start',''),mon.get('end',''))
+			so_items_map=get_sales_items(localcondition,item.item_name)
+			if so_items_map:
+				so_items=so_items_map[0]
+				lmonths.update({no_months:so_items.so_qty})
+			
+			no_months+=1
+			
 
 		total_sales_quantity = 0
 		
@@ -39,22 +45,22 @@ def execute(filters=None):
 		for i in lmonths:
 			iqty=lmonths.get(i,0)
 			total_sales_quantity+=iqty
-			datalist.append(iqty)
-		
-		avg_sales_quantity = float(total_sales_quantity)/total_no_months
-		reorder_quantity = scrap_quantity + avg_sales_quantity - warehouse_bal_quantity - warehouse_in_transit
-		datalist+=[total_sales_quantity, total_no_months, avg_sales_quantity, scrap_quantity, warehouse_bal_quantity, warehouse_in_transit, reorder_quantity]
+			datalist.append(str(iqty)+' ('+item.uom_name+')')
+		if no_months:
+			avg_sales_quantity = round((float(total_sales_quantity)/no_months),2)
+		reorder_quantity = round((scrap_quantity + avg_sales_quantity - warehouse_bal_quantity - warehouse_in_transit),2)
+		datalist+=[total_sales_quantity, no_months, avg_sales_quantity, scrap_quantity, warehouse_bal_quantity, warehouse_in_transit, reorder_quantity]
 		data.append(datalist)
 	#frappe.throw(repr(data))
 	return columns ,data
 
 def get_item_info(item_condition):
 	if item_condition:
-		query="select name, item_name from tabItem where %s" % item_condition
+		query="select it.name, it.item_name, um.uom_name from `tabItem` it, `tabUOM` um where it.stock_uom=um.name and %s" % item_condition
 		#frappe.throw(repr(query))
 		return frappe.db.sql(query, as_dict=1)
 
-	return frappe.db.sql("select name, item_name from tabItem", as_dict=1)
+	return frappe.db.sql("select it.name, it.item_name, um.uom_name as uom_name from `tabItem` it, `tabUOM` um where it.stock_uom=um.name", as_dict=1)
 
 def get_scrap_quantity(condition, item_name):
 	condition=" and it.item_name ='%s'" %item_name
@@ -93,7 +99,7 @@ def get_sales_items(condition, item_name):
 	condition+=" and so_item.item_name ='%s'" %item_name
 	query="""select so_item.item_name, so.transaction_date, sum(so_item.qty) as so_qty
 		from `tabSales Order` so, `tabSales Order Item` so_item
-		where so.name = so_item.parent %s group by so.transaction_date""" % (condition)
+		where so.name = so_item.parent %s group by MONTH(so.transaction_date)""" % (condition)
 	#frappe.throw(query)
 	so_items = frappe.db.sql(query, as_dict=1)
 	#frappe.throw(repr(so_items))
@@ -101,7 +107,7 @@ def get_sales_items(condition, item_name):
 
 
 def get_columns():
-	columns = [_("Product ID") + "::100",_("Product Name") + "::100",_("1st Month Sales Quantity") + ":Float:100",_("2nd Month Sales Quantity") + ":Float:100",_("3rd Month Sales Quantity") + ":Float:100",_("4th Month Sales Quantity") + ":Float:100",_("5th Month Sales Quantity") + ":Float:100",_("6th Month Sales Quantity") + ":Float:100",_("Total Sales Quantity") + ":Float:100",_("Total No of Months") + "::100",_("Average Sales Quantity") + ":Float:100",_("Scrap Warehouse Quantity") + ":Float:100",_("Stock Balance") + ":Float:100",_("Warehouse-in Transit") + ":Float:100",_("Reorder Quantity") + ":Float:100"
+	columns = [_("Product ID") + "::100",_("Product Name") + "::100",_("1st Month Sales Quantity") + "::100",_("2nd Month Sales Quantity") + "::100",_("3rd Month Sales Quantity") + "::100",_("4th Month Sales Quantity") + "::100",_("5th Month Sales Quantity") + "::100",_("6th Month Sales Quantity") + "::100",_("Total Sales Quantity") + ":Float:100",_("Total No of Months") + "::100",_("Average Sales Quantity") + ":Float:100",_("Scrap Warehouse Quantity") + ":Float:100",_("Stock Balance") + ":Float:100",_("Warehouse-in Transit") + ":Float:100",_("Reorder Quantity") + ":Float:100"
 		]
 		
 	return columns
@@ -109,30 +115,38 @@ def get_columns():
 def get_condition(filters):
 	conditions = ""
 	item_condition=""
-	months={}
-	if filters.get("to_date"):
-		to_date=filters.get("to_date")[0:7] + "-01"
-		to_da=datetime.strptime(to_date,"%Y-%m-%d")
-		from_da= to_da - timedelta(6*365/12)
+	
+	months=[]
+	if filters.get("to_date") and filters.get("from_date"):
+		# to_date=filters.get("to_date")[0:7] + "-01"
+		# to_da=datetime.strptime(to_date,"%Y-%m-%d")
+		# from_da= to_da - timedelta(6*365/12)
 		
-		from_date=from_da.strftime('%Y-%m-%d')
-		#frappe.throw(repr(filters.get("to_date")))
-		conditions += " and so.transaction_date >= '%s' and so.transaction_date <= '%s'" % (from_date,to_date)
+		# from_date=from_da.strftime('%Y-%m-%d')
+		to_date=filters.get("to_date")
+		to_da=datetime.strptime(to_date,"%Y-%m-%d")
+		from_date=filters.get("from_date")
+		from_da= datetime.strptime(from_date,"%Y-%m-%d")
+		if from_date>to_date:
+			frappe.throw("To Date must be greater than From Date")
+		#gen_conditions += " and so.transaction_date >= '%s' and so.transaction_date <= '%s'" % (from_date,to_date)
 		#frappe.throw(conditions)
-		flag=""
+		
 		while(from_da<to_da):
-			if from_da.strftime('%m')!=flag:
+			start=from_da.strftime("%Y-%m-%d")
+			flag=from_da.strftime('%m')
+			while(from_da.strftime('%m')==flag):
 				flag=from_da.strftime('%m')
-				months.update({int(flag):0})
-				
-			from_da+=timedelta(1)
+				end=from_da.strftime("%Y-%m-%d")
+				from_da+=timedelta(1)
+			months.append({'start':start,'end':end})
 
 	else:
-		frappe.throw(_("From and To dates required"))
+		frappe.throw(_("From and To dates are required"))
 
 	if filters.get("item"):
 		item_condition += " item_code = '%s'" % filters["item"]
-
-		#frappe.throw(repr(item_condition))
+	if len(months)>6:
+		frappe.throw("Difference between Date FROM and TO must not more than 6")
 
 	return conditions,months,item_condition

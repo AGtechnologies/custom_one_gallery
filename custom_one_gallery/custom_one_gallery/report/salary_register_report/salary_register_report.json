@@ -1,0 +1,17 @@
+{
+ "add_total_row": 1, 
+ "apply_user_permissions": 1, 
+ "creation": "2016-09-01 09:09:42", 
+ "docstatus": 0, 
+ "doctype": "Report", 
+ "idx": 1, 
+ "is_standard": "Yes", 
+ "modified": "2016-09-01 11:18:17.187018", 
+ "modified_by": "Administrator", 
+ "module": "Custom One Gallery", 
+ "name": "Salary Register Report", 
+ "owner": "Administrator", 
+ "ref_doctype": "Salary Slip", 
+ "report_name": "Salary Register Report", 
+ "report_type": "Script Report"
+}
