@@ -34,9 +34,12 @@ def get_columns(filters):
 
 def get_conditions(filters):
 	conditions = ""
-
-	if filters.get("report_date"):
-		conditions += "and due_date <= '%s'" % frappe.db.escape(filters["report_date"])
+	if filters.get("ageing_based_on")=='Posting Date':
+		if filters.get("report_date"):
+			conditions += "and posting_date <= '%s'" % frappe.db.escape(filters["report_date"])
+	elif filters.get("ageing_based_on")=='Due Date':
+		if filters.get("report_date"):
+			conditions += "and due_date <= '%s'" % frappe.db.escape(filters["report_date"])
 
 	else:
 		frappe.throw(_("'Date' is required"))
