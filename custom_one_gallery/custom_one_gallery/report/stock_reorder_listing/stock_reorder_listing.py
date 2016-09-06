@@ -24,7 +24,7 @@ def execute(filters=None):
 		scrap_quantity = 0
 		warehouse_bal_quantity = 0
 		warehouse_in_transit = 0
-		avg_sales_quantity=0
+		avg_sales_quantity=0.0
 		scrap_quantity=get_scrap_quantity(condition,item.item_name)
 		warehouse_in_transit=get_warehouse_transit(condition ,item.item_name)
 		warehouse_bal_quantity=get_stock_balance(condition,item.item_name)
@@ -39,16 +39,17 @@ def execute(filters=None):
 			no_months+=1
 			
 
-		total_sales_quantity = 0
+		total_sales_quantity = 0.0
 		
 		datalist=[item.name, item.item_name]
 		for i in lmonths:
 			iqty=lmonths.get(i,0)
 			total_sales_quantity+=iqty
-			datalist.append(str(iqty)+' ('+item.uom_name+')')
+			datalist.append(str(iqty))
 		if no_months:
 			avg_sales_quantity = round((float(total_sales_quantity)/no_months),2)
 		reorder_quantity = round((scrap_quantity + avg_sales_quantity - warehouse_bal_quantity - warehouse_in_transit),2)
+		total_sales_quantity = round(float(total_sales_quantity),2)
 		datalist+=[total_sales_quantity, no_months, avg_sales_quantity, scrap_quantity, warehouse_bal_quantity, warehouse_in_transit, reorder_quantity]
 		data.append(datalist)
 	#frappe.throw(repr(data))
@@ -107,7 +108,7 @@ def get_sales_items(condition, item_name):
 
 
 def get_columns():
-	columns = [_("Product ID") + "::100",_("Product Name") + "::100",_("1st Month Sales Quantity") + "::100",_("2nd Month Sales Quantity") + "::100",_("3rd Month Sales Quantity") + "::100",_("4th Month Sales Quantity") + "::100",_("5th Month Sales Quantity") + "::100",_("6th Month Sales Quantity") + "::100",_("Total Sales Quantity") + ":Float:100",_("Total No of Months") + "::100",_("Average Sales Quantity") + ":Float:100",_("Scrap Warehouse Quantity") + ":Float:100",_("Stock Balance") + ":Float:100",_("Warehouse-in Transit") + ":Float:100",_("Reorder Quantity") + ":Float:100"
+	columns = [_("Product ID") + "::100",_("Product Name") + "::100",_("1st Month Sales Quantity(UOM)") + "::100",_("2nd Month Sales Quantity(UOM)") + "::100",_("3rd Month Sales Quantity(UOM)") + "::100",_("4th Month Sales Quantity(UOM)") + "::100",_("5th Month Sales Quantity(UOM)") + "::100",_("6th Month Sales Quantity(UOM)") + "::100",_("Total Sales Quantity") + ":Float:100",_("Total No of Months") + "::100",_("Average Sales Quantity") + ":Float:100",_("Scrap Warehouse Quantity") + ":Float:100",_("Stock Balance (all local warehouse)") + ":Float:100",_("Warehouse-in Transit") + ":Float:100",_("Suggested Reorder Quantity") + ":Float:100"
 		]
 		
 	return columns

@@ -1,0 +1,74 @@
+<div style="margin-bottom: 27px;" class="text-center">
+	{%= frappe.boot.letter_heads[frappe.defaults.get_default("letter_head")] %}
+</div>
+<h3 class="text-center" style="padding-top:80pt;">{%= __("STATEMENT OF ACCOUNT") %}</h3>
+
+<h5 class="text-center">
+	{%= __("As of Date: ") %}
+	{%= filters.to_date %}
+</h5>
+
+<table class="table table-bordered">
+	<thead>
+		<tr>
+			<th style="width: 20%">{%= __("Invoice No") %}</th>
+			<th style="width: 20%">{%= __("Invoice Date") %}</th>
+			<th style="width: 20%">{%= __("Invoice Amount") %}</th>
+			<th style="width: 20%">{%= __("Paid Amount") %}</th>
+			<th style="width: 20%">{%= __("Balance Amount") %}</th>
+		</tr>
+	</thead>
+	<tbody>
+		{% for(var i=0, l=data.length; i<l; i++) { %}
+			<tr>
+				<td>{%= data[i][__("Invoice No")] %}</td>
+				<td>{%= dateutil.str_to_user(data[i][__("Invoice Date")]) %}</td>
+				<td style="text-align: right">
+					{%= format_currency(data[i][__("Invoice Amount")], data[i]["currency"]) %}</td>
+				<td style="text-align: right">
+					{%= format_currency(data[i][__("Paid Amount")], data[i]["currency"]) %}</td>
+				<td style="text-align: right">
+					{%= format_currency(data[i][__("Balance Amount")], data[i]["currency"]) %}</td>
+			</tr>
+		{% } %}
+	</tbody>
+</table>
+<br/>
+<br/>
+<p class="text-left"><u>Ageing Summary:</u></p>
+<table class="table table-bordered">
+	<thead>
+		<tr>
+			<th style="width: 20%">{%= __("&lt;30 Days ") %}</th>
+			<th style="width: 20%">{%= __("31-60 days") %}</th>
+			<th style="width: 20%">{%= __("&gt;60 Days") %}</th>
+		</tr>
+	</thead>
+	<tbody>
+		<tr>
+			<td></td>
+			<td></td>	
+			<td></td>
+		</tr>
+	</tbody>
+</table>
+<br/>
+<br/>
+<p class="text-left">Remarks: Please make crossed cheque payable to “ONE GALLERY PTE LTD”</p>
+<br/>
+<br/>
+<p class="text-left">By signing this document, I acknowledge that I reviewed the products &amp; services requested to be delivered by AG Technologies Pte Ltd and understand that once I sign this document, I will only be allowed to make changes two times.</p>
+<br/>
+<br/>
+
+<p class="text-left">____________________________________</p>
+<p style="margin-left:80px;">
+     (sign here)
+</p>
+<br/>
+<br/>
+
+<b>USER MANAGER</b><br/>
+<b>Name: </b><br/>
+<b>Company: </b><br/>
+<b>Date: </b>

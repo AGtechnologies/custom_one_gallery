@@ -14,41 +14,41 @@
 <table class="table table-bordered">
 	<thead>
 		<tr>
-			<th style="width: 15%">{%= __("Product ID") %}</th>
-			<th style="width: 15%">{%= __("Product Name") %}</th>
-			<th style="width: 15%">{%= __("1st Month Sales Quantity") %}</th>
-			<th style="width: 20%">{%= __("2nd Month Sales Quantity") %}</th>
-			<th style="width: 15%">{%= __("3rd Month Sales Quantity") %}</th>
-			<th style="width: 10%">{%= __("4th Month Sales Quantity") %}</th>
-			<th style="width: 10%">{%= __("5th Month Sales Quantity") %}</th>
-			<th style="width: 10%">{%= __("6th Month Sales Quantity") %}</th>
+			<th style="width: 10%">{%= __("Product ID") %}</th>
+			<th style="width: 50%;">{%= __("Product Name") %}</th>
+			<th style="width: 10%">{%= __("1st Month Sales Quantity(UOM)") %}</th>
+			<th style="width: 10%">{%= __("2nd Month Sales Quantity(UOM)") %}</th>
+			<th style="width: 10%">{%= __("3rd Month Sales Quantity(UOM)") %}</th>
+			<th style="width: 10%">{%= __("4th Month Sales Quantity(UOM)") %}</th>
+			<th style="width: 10%">{%= __("5th Month Sales Quantity(UOM)") %}</th>
+			<th style="width: 10%">{%= __("6th Month Sales Quantity(UOM)") %}</th>
 			<th style="width: 10%">{%= __("Total Sales Quantity") %}</th>
 			<th style="width: 10%">{%= __("Total No of Months") %}</th>
 			<th style="width: 10%">{%= __("Average Sales Quantity") %}</th>
 			<th style="width: 10%">{%= __("Scrap Warehouse Quantity") %}</th>
-			<th style="width: 10%">{%= __("Stock Blance") %}</th>
+			<th style="width: 10%">{%= __("Stock Balance (all local warehouse)") %}</th>
 			<th style="width: 10%">{%= __("Warehouse-in Transit") %}</th>
-			<th style="width: 10%">{%= __("Reorder Quantity") %}</th>
+			<th style="width: 10%">{%= __("Suggested Reorder Quantity") %}</th>
 		</tr>
 	</thead>
 	<tbody>
 		{% for(var i=0, l=data.length; i<l; i++) { %}
 			<tr>
 				<td style="text-align: center">{%= data[i][__("Product ID")] %}</td>
-				<td style="text-align: center">{%= data[i][__("Product Name")] %}</td>
-				<td style="text-align: center">{%= data[i][__("1st Month Sales Quantity")] %}</td>
-				<td style="text-align: center">{%= data[i][__("2nd Month Sales Quantity")] %}</td>
-				<td style="text-align: center">{%= data[i][__("3rd Month Sales Quantity")] %}</td>
-				<td style="text-align: center">{%= data[i][__("4th Month Sales Quantity")] %}</td>
-				<td style="text-align: center">{%= data[i][__("5th Month Sales Quantity")] %}</td>
-				<td style="text-align: center">{%= data[i][__("6th Month Sales Quantity")] %}</td>
+				<td style="text-align: center;width: 50%;">{%= data[i][__("Product Name")] %}</td>
+				<td style="text-align: center">{%= data[i][__("1st Month Sales Quantity(UOM)")] %}</td>
+				<td style="text-align: center">{%= data[i][__("2nd Month Sales Quantity(UOM)")] %}</td>
+				<td style="text-align: center">{%= data[i][__("3rd Month Sales Quantity(UOM)")] %}</td>
+				<td style="text-align: center">{%= data[i][__("4th Month Sales Quantity(UOM)")] %}</td>
+				<td style="text-align: center">{%= data[i][__("5th Month Sales Quantity(UOM)")] %}</td>
+				<td style="text-align: center">{%= data[i][__("6th Month Sales Quantity(UOM)")] %}</td>
 				<td style="text-align: center">{%= data[i][__("Total Sales Quantity")] %}</td>
 				<td style="text-align: center">{%= data[i][__("Total No of Months")] %}</td>
 				<td style="text-align: center">{%= data[i][__("Average Sales Quantity")] %}</td>
 				<td style="text-align: center">{%= data[i][__("Scrap Warehouse Quantity")] %}</td>
-				<td style="text-align: center">{%= data[i][__("Stock Blance")] %}</td>
+				<td style="text-align: center">{%= data[i][__("Stock Balance (all local warehouse)")] %}</td>
 				<td style="text-align: center">{%= data[i][__("Warehouse-in Transit")] %}</td>
-				<td style="text-align: center">{%= data[i][__("Reorder Quantity")] %}</td>
+				<td style="text-align: center">{%= data[i][__("Suggested Reorder Quantity")] %}</td>
 			</tr>
 		{% } %}
 	</tbody>

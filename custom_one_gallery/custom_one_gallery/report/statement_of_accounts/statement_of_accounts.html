@@ -5,18 +5,14 @@
 	{%= __(" STATEMENT OF ACCOUNTS AS OF") %}
 	{%= dateutil.str_to_user(filters.report_date) %}
 </h3>
-<h4 class="text-center">{%= __(" Statement Date: ") %}
-{%= dateutil.str_to_user(get_today()) %}</h4>
 <h4 class="text-center">{%= __(" Customer Name: ") %}{%= filters.customer %}, {%= __(" Customer ID: ") %}{%= data[0][__("Customer ID")] %}</h4>
-<h4 class="text-center">{%= __(" Currency: ") %}{%= data[0][__("Currency")] %}, {%= __(" Payment Term: ") %}{%= data[0][__("Payment Term")] %}</h4>
+<h4 class="text-center">{%= __(" Payment Term: ") %}{%= data[0][__("Payment Term")] %}, {%= __(" Currency: ") %}{%= data[0][__("Currency")] %}</h4>
 <hr>
 <table class="table table-bordered">
 	<thead>
 		<tr>
 			<th style="width: 15%">{%= __("Invoice Date") %}</th>
-			<th style="width: 15%">{%= __("Document") %}</th>
 			<th style="width: 15%">{%= __("Invoice No.") %}</th>
-			<th style="width: 20%">{%= __("Customer's Contact Person") %}</th>
 			<th style="width: 10%">{%= __("Days Overdue") %}</th>
 			<th style="width: 10%">{%= __("Amount") %}</th>
 		</tr>
@@ -25,9 +21,7 @@
 		{% for(var i=0, l=data.length; i<l; i++) { %}
 			<tr>
 				<td>{%= data[i][__("Invoice Date")] %}</td>
-				<td>{%= data[i][__("Document")] %}</td>
 				<td>{%= data[i][__("Invoice No.")] %}</td>
-				<td>{%= data[i][__("Customer's Contact Person")] %}</td>
 				<td>{%= data[i][__("Days Overdue")] %}</td>
 				<td style="text-align: right">{%= format_currency(data[i][__("Amount")], data[i][__("Currency")]) %}</td>
 			</tr>
