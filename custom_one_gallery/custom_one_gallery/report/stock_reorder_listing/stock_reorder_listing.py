@@ -12,14 +12,18 @@ def execute(filters=None):
 	if not filters: filters = {}
 
 	condition,months,item_condition=get_condition(filters)
-	columns = get_columns()
+	columns = get_columns(months,item_condition)
 	items = get_item_info(item_condition)
 
-	
 	data = []
 	for item in items:
-		
 		lmonths={0:0,1:0,2:0,3:0,4:0,5:0}
+		if len(months)<6:
+			lmonths={}
+			mf=0
+			for m in months:
+				lmonths.update({mf:0})
+				mf+=1
 		no_months = 0
 		scrap_quantity = 0
 		warehouse_bal_quantity = 0
@@ -38,18 +42,18 @@ def execute(filters=None):
 			
 			no_months+=1
 			
-
 		total_sales_quantity = 0.0
-		
+		#frappe.throw(str(lmonths))
 		datalist=[item.name, item.item_name]
 		for i in lmonths:
 			iqty=lmonths.get(i,0)
 			total_sales_quantity+=iqty
 			datalist.append(str(iqty))
+		#frappe.throw(repr(datalist))
 		if no_months:
 			avg_sales_quantity = round((float(total_sales_quantity)/no_months),2)
 		reorder_quantity = round((scrap_quantity + avg_sales_quantity - warehouse_bal_quantity - warehouse_in_transit),2)
-		total_sales_quantity = round(float(total_sales_quantity),2)
+		
 		datalist+=[total_sales_quantity, no_months, avg_sales_quantity, scrap_quantity, warehouse_bal_quantity, warehouse_in_transit, reorder_quantity]
 		data.append(datalist)
 	#frappe.throw(repr(data))
@@ -107,8 +111,17 @@ def get_sales_items(condition, item_name):
 	return so_items
 
 
-def get_columns():
-	columns = [_("Product ID") + "::100",_("Product Name") + "::100",_("1st Month Sales Quantity(UOM)") + "::100",_("2nd Month Sales Quantity(UOM)") + "::100",_("3rd Month Sales Quantity(UOM)") + "::100",_("4th Month Sales Quantity(UOM)") + "::100",_("5th Month Sales Quantity(UOM)") + "::100",_("6th Month Sales Quantity(UOM)") + "::100",_("Total Sales Quantity") + ":Float:100",_("Total No of Months") + "::100",_("Average Sales Quantity") + ":Float:100",_("Scrap Warehouse Quantity") + ":Float:100",_("Stock Balance (all local warehouse)") + ":Float:100",_("Warehouse-in Transit") + ":Float:100",_("Suggested Reorder Quantity") + ":Float:100"
+def get_columns(months,item_condition):
+	items = get_item_info(item_condition)
+	uom=''
+	for item in items:
+		uom=item.uom_name
+	#frappe.throw(str(uom))
+	columns = [_("Product ID") + "::100",_("Product Name") + "::200"]
+	for mon in months:
+		month_name=(datetime.strptime(mon.get('start'),'%Y-%m-%d').strftime('%B'))+' Sales Quantity ('+uom+')'
+		columns.append(month_name + ":Float:150")
+	columns+=[_("Total Sales Quantity") + ":Float:100",_("Total No of Months") + ":Int:100",_("Average Sales Quantity") + ":Float:100",_("Scrap Warehouse Quantity") + ":Float:100",_("Stock Balance (all local warehouse)") + ":Float:100",_("Warehouse-in Transit") + ":Float:100",_("Suggested Reorder Quantity") + ":Float:100"
 		]
 		
 	return columns
@@ -118,13 +131,18 @@ def get_condition(filters):
 	item_condition=""
 	
 	months=[]
+	today=datetime.now().strftime("%Y-%m-%d")
+	to_date=filters.get("to_date")
+	if to_date>today:
+		frappe.throw("To Date can not be greater than Current Date.")
+
 	if filters.get("to_date") and filters.get("from_date"):
 		# to_date=filters.get("to_date")[0:7] + "-01"
 		# to_da=datetime.strptime(to_date,"%Y-%m-%d")
 		# from_da= to_da - timedelta(6*365/12)
 		
 		# from_date=from_da.strftime('%Y-%m-%d')
-		to_date=filters.get("to_date")
+		
 		to_da=datetime.strptime(to_date,"%Y-%m-%d")
 		from_date=filters.get("from_date")
 		from_da= datetime.strptime(from_date,"%Y-%m-%d")
@@ -147,6 +165,7 @@ def get_condition(filters):
 
 	if filters.get("item"):
 		item_condition += " item_code = '%s'" % filters["item"]
+
 	if len(months)>6:
 		frappe.throw("Difference between Date FROM and TO must not more than 6")
 

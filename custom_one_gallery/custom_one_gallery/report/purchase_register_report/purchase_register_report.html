@@ -1,0 +1,57 @@
+<div style="margin-bottom: 7px;" class="text-center">
+	{%= frappe.boot.letter_heads[frappe.defaults.get_default("letter_head")] %}
+</div>
+<h3 class="text-center">
+	{%= __(" PURCHASE REGISTER REPORT") %}
+</h3>
+
+<h4 class="text-center">{%= __(" Currency: ") %}{%= data[0][__("Currency")] %}</h4>
+<hr>
+<table class="table table-bordered">
+	<thead>
+		<tr>
+			<th style="width: 15%">{%= __("Invoice") %}</th>
+			<th style="width: 15%">{%= __("Posting Date") %}</th>
+			<th style="width: 10%">{%= __("Supplier Id") %}</th>
+			<th style="width: 15%">{%= __("Supplier Name") %}</th>
+			<th style="width: 10%">{%= __("Supplier Type") %}</th>
+			<th style="width: 10%">{%= __("Payable Account") %}</th>
+			<th style="width: 15%">{%= __("Mode of Payment") %}</th>
+			<th style="width: 10%">{%= __("Project") %}</th>
+			<th style="width: 15%">{%= __("Bill No") %}</th>
+			<th style="width: 15%">{%= __("Bill Date") %}</th>
+			<th style="width: 15%">{%= __("Remarks") %}</th>
+			<th style="width: 10%">{%= __("Purchase Order") %}</th>
+			<th style="width: 15%">{%= __("Purchase Receipt") %}</th>
+			<th style="width: 15%">{%= __("Net Total") %}</th>
+			<th style="width: 10%">{%= __("Total Tax") %}</th>
+			<th style="width: 10%">{%= __("Grand Total") %}</th>
+			<th style="width: 10%">{%= __("Rounded Total") %}</th>
+			<th style="width: 10%">{%= __("Outstanding Amount") %}</th>
+		</tr>
+	</thead>
+	<tbody>
+		{% for(var i=0, l=data.length; i<l; i++) { %}
+			<tr>
+				<td>{%= data[i][__("Invoice")] %}</td>
+				<td>{%= data[i][__("Posting Date")] %}</td>
+				<td>{%= data[i][__("Supplier Id")] %}</td>
+				<td>{%= data[i][__("Supplier Name")] %}</td>
+				<td>{%= data[i][__("Supplier Type")] %}</td>
+				<td>{%= data[i][__("Payable Account")] %}</td>
+				<td>{%= data[i][__("Mode of Payment")] %}</td>
+				<td>{%= data[i][__("Project")] %}</td>
+				<td>{%= data[i][__("Bill No")] %}</td>
+				<td>{%= data[i][__("Bill Date")] %}</td>
+				<td>{%= data[i][__("Remarks")] %}</td>
+				<td>{%= data[i][__("Purchase Order")] %}</td>
+				<td>{%= data[i][__("Purchase Receipt")] %}</td>
+				<td style="text-align: right">{%= format_currency(data[i][__("Net Total")], data[i][__("Currency")]) %}</td>
+				<td style="text-align: right">{%= format_currency(data[i][__("Total Tax")], data[i][__("Currency")]) %}</td>
+				<td style="text-align: right">{%= format_currency(data[i][__("Grand Total")], data[i][__("Currency")]) %}</td>
+				<td style="text-align: right">{%= format_currency(data[i][__("Rounded Total")], data[i][__("Currency")]) %}</td>
+				<td style="text-align: right">{%= format_currency(data[i][__("Outstanding Amount")], data[i][__("Currency")]) %}</td>
+			</tr>
+		{% } %}
+	</tbody>
+</table>

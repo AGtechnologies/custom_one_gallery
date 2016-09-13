@@ -85,7 +85,7 @@ def get_cust_list(filters):
 	#conditions = []
 	# aa="""select naming_series, posting_date, base_grand_total, base_paid_amount from `tabSales Invoice` where %s order by posting_date""" % conditions
 	# frappe.throw(_(aa))
-	cust_list = frappe.db.sql("""select si.name, si.posting_date, si.due_date, si.naming_series, si.base_grand_total, si.customer_name, cs.name as customer_id, cs.credit_days, cr.currency_name from `tabSales Invoice` si, `tabCustomer` cs, `tabCurrency` cr where cs.name=si.customer and cs.default_currency=cr.currency_name %s order by posting_date""" %
+	cust_list = frappe.db.sql("""select si.name, si.posting_date, si.due_date, si.naming_series, si.base_grand_total, si.customer_name, cs.name as customer_id, cs.credit_days, cr.currency_name from `tabSales Invoice` si, `tabCustomer` cs, `tabCurrency` cr where cs.name=si.customer and cs.default_currency=cr.currency_name %s order by si.posting_date""" %
 		conditions, as_dict=1)
 
 	return cust_list

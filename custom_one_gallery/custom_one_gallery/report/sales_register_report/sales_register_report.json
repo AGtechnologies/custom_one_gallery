@@ -1,0 +1,17 @@
+{
+ "add_total_row": 1, 
+ "apply_user_permissions": 1, 
+ "creation": "2016-09-07 10:15:29", 
+ "docstatus": 0, 
+ "doctype": "Report", 
+ "idx": 1, 
+ "is_standard": "Yes", 
+ "modified": "2016-09-07 12:18:17.317451", 
+ "modified_by": "Administrator", 
+ "module": "Custom One Gallery", 
+ "name": "Sales Register Report", 
+ "owner": "Administrator", 
+ "ref_doctype": "Sales Invoice", 
+ "report_name": "Sales Register Report", 
+ "report_type": "Script Report"
+}

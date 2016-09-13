@@ -1,0 +1,17 @@
+{
+ "add_total_row": 1,
+ "apply_user_permissions": 1,
+ "creation": "2016-09-07 10:15:29",
+ "docstatus": 0,
+ "doctype": "Report",
+ "idx": 1,
+ "is_standard": "Yes",
+ "modified": "2016-09-07 12:15:29",
+ "modified_by": "Administrator",
+ "module": "Custom One Gallery",
+ "name": "Accounts Payable Report",
+ "owner": "Administrator",
+ "ref_doctype": "Purchase Invoice",
+ "report_name": "Accounts Payable Report",
+ "report_type": "Script Report"
+}
