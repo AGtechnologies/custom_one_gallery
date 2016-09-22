@@ -14,7 +14,7 @@
 	<thead>
 		<tr>
 			<th style="width: 15%">{%= __("Date") %}</th>
-			<th style="width: 15%">{%= __("Ref") %}</th>
+			<th style="width: 15%">{%= __("Sales Invoice") %}</th>
 			<th style="width: 40%">{%= __("Party") %}</th>
 			<th style="width: 15%">{%= __("Invoiced Amount") %}</th>
 			<th style="width: 15%">{%= __("Paid Amount") %}</th>
@@ -25,8 +25,7 @@
 		{% for(var i=0, l=data.length; i<l; i++) { %}
 			<tr>
 				<td>{%= dateutil.str_to_user(data[i][__("Posting Date")]) %}</td>
-				<td>{%= data[i][__("Voucher Type")] %}
-					<br>{%= data[i][__("Voucher No")] %}</td>
+				<td>{%= data[i][__("Voucher No")] %}</td>
 				<td>{%= data[i][__("Customer Name")] || data[i][__("Customer")] %}
 					<br>{%= __("Remarks") %}: {%= data[i][__("Remarks")] %}</td>
 				<td style="text-align: right">

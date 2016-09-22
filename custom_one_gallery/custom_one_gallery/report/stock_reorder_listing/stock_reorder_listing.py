@@ -39,8 +39,8 @@ def execute(filters=None):
 			if so_items_map:
 				so_items=so_items_map[0]
 				lmonths.update({no_months:so_items.so_qty})
-			
-			no_months+=1
+				if so_items.so_qty:
+					no_months+=1
 			
 		total_sales_quantity = 0.0
 		#frappe.throw(str(lmonths))
@@ -119,7 +119,11 @@ def get_columns(months,item_condition):
 	#frappe.throw(str(uom))
 	columns = [_("Product ID") + "::100",_("Product Name") + "::200"]
 	for mon in months:
-		month_name=(datetime.strptime(mon.get('start'),'%Y-%m-%d').strftime('%B'))+' Sales Quantity ('+uom+')'
+		start=datetime.strptime(mon.get('start'),'%Y-%m-%d')
+		end=datetime.strptime(mon.get('end'),'%Y-%m-%d')
+		
+		month_name=start.strftime('%d')+'-'+end.strftime('%d')+' '+start.strftime('%B')+' Sales Quantity ('+uom+')'
+		#frappe.throw(repr(month_name))
 		columns.append(month_name + ":Float:150")
 	columns+=[_("Total Sales Quantity") + ":Float:100",_("Total No of Months") + ":Int:100",_("Average Sales Quantity") + ":Float:100",_("Scrap Warehouse Quantity") + ":Float:100",_("Stock Balance (all local warehouse)") + ":Float:100",_("Warehouse-in Transit") + ":Float:100",_("Suggested Reorder Quantity") + ":Float:100"
 		]
@@ -150,15 +154,18 @@ def get_condition(filters):
 			frappe.throw("To Date must be greater than From Date")
 		#gen_conditions += " and so.transaction_date >= '%s' and so.transaction_date <= '%s'" % (from_date,to_date)
 		#frappe.throw(conditions)
-		
+		end=""
 		while(from_da<to_da):
 			start=from_da.strftime("%Y-%m-%d")
 			flag=from_da.strftime('%m')
 			while(from_da.strftime('%m')==flag):
 				flag=from_da.strftime('%m')
 				end=from_da.strftime("%Y-%m-%d")
+				if flag==to_da.strftime('%m'):
+					end=to_da.strftime("%Y-%m-%d")
 				from_da+=timedelta(1)
 			months.append({'start':start,'end':end})
+		#frappe.throw(repr(months))
 
 	else:
 		frappe.throw(_("From and To dates are required"))
