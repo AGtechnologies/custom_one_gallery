@@ -15,8 +15,8 @@
 <table class="table table-bordered">
 	<thead>
 		<tr>
-			
-			{% for(var i=0, l=report.columns.length; i<l; i++) { %}
+			<th style="text-align:center;width:50px;">{%= __("S/No") %}</th>
+			{% for(var i=1, l=report.columns.length; i<l; i++) { %}
 				<th style="text-align:center;width:1000px;">{%= report.columns[i].label %}</th>
 			{% } %}
 			

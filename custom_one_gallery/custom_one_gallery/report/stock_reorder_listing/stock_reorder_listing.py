@@ -44,7 +44,7 @@ def execute(filters=None):
 			
 		total_sales_quantity = 0.0
 		#frappe.throw(str(lmonths))
-		datalist=[item.name, item.item_name]
+		datalist=[item.name, item.item_name,item.uom_name]
 		for i in lmonths:
 			iqty=lmonths.get(i,0)
 			total_sales_quantity+=iqty
@@ -53,7 +53,8 @@ def execute(filters=None):
 		if no_months:
 			avg_sales_quantity = round((float(total_sales_quantity)/no_months),2)
 		reorder_quantity = round((scrap_quantity + avg_sales_quantity - warehouse_bal_quantity - warehouse_in_transit),2)
-		
+		if reorder_quantity<=0:
+			reorder_quantity=0
 		datalist+=[total_sales_quantity, no_months, avg_sales_quantity, scrap_quantity, warehouse_bal_quantity, warehouse_in_transit, reorder_quantity]
 		data.append(datalist)
 	#frappe.throw(repr(data))
@@ -113,19 +114,19 @@ def get_sales_items(condition, item_name):
 
 def get_columns(months,item_condition):
 	items = get_item_info(item_condition)
-	uom=''
-	for item in items:
-		uom=item.uom_name
+	# uom=''
+	# for item in items:
+	# 	uom=item.uom_name
 	#frappe.throw(str(uom))
-	columns = [_("Product ID") + "::100",_("Product Name") + "::200"]
+	columns = [_("Product ID") + "::100",_("Product Name") + "::200",_("UOM") + "::100"]
 	for mon in months:
 		start=datetime.strptime(mon.get('start'),'%Y-%m-%d')
 		end=datetime.strptime(mon.get('end'),'%Y-%m-%d')
 		
-		month_name=start.strftime('%d')+'-'+end.strftime('%d')+' '+start.strftime('%B')+' Sales Quantity ('+uom+')'
+		month_name=start.strftime('%d')+'-'+end.strftime('%d')+' '+start.strftime('%b')+' Sales Qty'
 		#frappe.throw(repr(month_name))
 		columns.append(month_name + ":Float:150")
-	columns+=[_("Total Sales Quantity") + ":Float:100",_("Total No of Months") + ":Int:100",_("Average Sales Quantity") + ":Float:100",_("Scrap Warehouse Quantity") + ":Float:100",_("Stock Balance (all local warehouse)") + ":Float:100",_("Warehouse-in Transit") + ":Float:100",_("Suggested Reorder Quantity") + ":Float:100"
+	columns+=[_("Total Sales Qty") + ":Float:100",_("Total No of Months") + ":Int:100",_("Average Sales Qty") + ":Float:100",_("Scrap W/Hse Qty") + ":Float:100",_("Stock Balance (all local W/Hse)") + ":Float:100",_("W/Hse-in Transit") + ":Float:100",_("Suggested Reorder Qty") + ":Float:100"
 		]
 		
 	return columns
