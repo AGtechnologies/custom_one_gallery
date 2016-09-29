@@ -1,74 +1,59 @@
-<div style="margin-bottom: 27px;" class="text-center">
+<div style="margin-bottom: 7px;" class="text-center">
 	{%= frappe.boot.letter_heads[frappe.defaults.get_default("letter_head")] %}
 </div>
-<h3 class="text-center" style="padding-top:80pt;">{%= __("STATEMENT OF ACCOUNT") %}</h3>
-
-<h5 class="text-center">
-	{%= __("As of Date: ") %}
-	{%= filters.to_date %}
-</h5>
-
+<h3 class="text-center">
+	{%= __("STATEMENT OF ACCOUNTS AS OF ") %}
+	{%= dateutil.str_to_user(filters.report_date) %}
+</h3>
+<h4 class="text-center">{%= __(" Customer Name: ") %}{%= filters.customer %}, {%= __(" Customer ID: ") %}{%= data[0][__("Customer ID")] %}</h4>
+<h4 class="text-center">{%= __(" Payment Term: ") %}{%= data[0][__("Payment Term")] %}, {%= __(" Currency: ") %}{%= data[0][__("Currency")] %}</h4>
+<hr>
 <table class="table table-bordered">
 	<thead>
 		<tr>
-			<th style="width: 20%">{%= __("Invoice No") %}</th>
-			<th style="width: 20%">{%= __("Invoice Date") %}</th>
-			<th style="width: 20%">{%= __("Invoice Amount") %}</th>
-			<th style="width: 20%">{%= __("Paid Amount") %}</th>
-			<th style="width: 20%">{%= __("Balance Amount") %}</th>
+			<th style="width: 15%">{%= __("Invoice Date") %}</th>
+			<th style="width: 15%">{%= __("Invoice No.") %}</th>
+			<th style="width: 10%">{%= __("Days Overdue") %}</th>
+			<th style="width: 10%">{%= __("Amount") %}</th>
 		</tr>
 	</thead>
 	<tbody>
 		{% for(var i=0, l=data.length; i<l; i++) { %}
 			<tr>
-				<td>{%= data[i][__("Invoice No")] %}</td>
-				<td>{%= dateutil.str_to_user(data[i][__("Invoice Date")]) %}</td>
-				<td style="text-align: right">
-					{%= format_currency(data[i][__("Invoice Amount")], data[i]["currency"]) %}</td>
-				<td style="text-align: right">
-					{%= format_currency(data[i][__("Paid Amount")], data[i]["currency"]) %}</td>
-				<td style="text-align: right">
-					{%= format_currency(data[i][__("Balance Amount")], data[i]["currency"]) %}</td>
+				<td>{%= data[i][__("Invoice Date")] %}</td>
+				<td>{%= data[i][__("Invoice No.")] %}</td>
+				<td>{%= data[i][__("Days Overdue")] %}</td>
+				<td style="text-align: right">{%= format_currency(data[i][__("Amount")], data[i][__("Currency")]) %}</td>
 			</tr>
 		{% } %}
 	</tbody>
 </table>
-<br/>
-<br/>
-<p class="text-left"><u>Ageing Summary:</u></p>
+<br/><br/><br/><br/>
+<p class="text-left">Aging Analysis:</p>
 <table class="table table-bordered">
 	<thead>
 		<tr>
-			<th style="width: 20%">{%= __("&lt;30 Days ") %}</th>
-			<th style="width: 20%">{%= __("31-60 days") %}</th>
-			<th style="width: 20%">{%= __("&gt;60 Days") %}</th>
+			<th style="width: 20%">{%= __("0 - " + filters.range1 +" Days") %}</th>
+			<th style="width: 20%">{%= __(filters.range1 + " - " + filters.range2 + " Days") %}</th>
+			<th style="width: 20%">{%= __(filters.range2 + " - " + filters.range3 + " Days") %}</th>
+			<th style="width: 20%">{%= __("Over " + filters.range3 + " Days") %}</th>
+			<th style="width: 20%">{%= __("Total Outstanding Balance") %}</th>
 		</tr>
 	</thead>
 	<tbody>
-		<tr>
-			<td></td>
-			<td></td>	
-			<td></td>
-		</tr>
+		{% for(var i=l-1, l=data.length; i<l; i++) { %}
+			<tr>
+				<td style="text-align: right">{%= format_currency(data[i][__("0 - " + filters.range1 +" Days")], data[i][__("Currency")]) %}</td>
+				<td style="text-align: right">{%= format_currency(data[i][__(filters.range1 + " - " + filters.range2 + " Days")], data[i][__("Currency")]) %}</td>
+				<td style="text-align: right">{%= format_currency(data[i][__(filters.range2 + " - " + filters.range3 + " Days")], data[i][__("Currency")]) %}</td>
+				<td style="text-align: right">{%= format_currency(data[i][__("Over " + filters.range3 + " Days")], data[i][__("Currency")]) %}</td>
+				<td style="text-align: right">{%= format_currency(data[i][__("Total Outstanding Balance")], data[i][__("Currency")]) %}</td>
+			</tr>
+		{% } %}
 	</tbody>
 </table>
-<br/>
-<br/>
-<p class="text-left">Remarks: Please make crossed cheque payable to “ONE GALLERY PTE LTD”</p>
-<br/>
-<br/>
-<p class="text-left">By signing this document, I acknowledge that I reviewed the products &amp; services requested to be delivered by AG Technologies Pte Ltd and understand that once I sign this document, I will only be allowed to make changes two times.</p>
-<br/>
-<br/>
-
-<p class="text-left">____________________________________</p>
-<p style="margin-left:80px;">
-     (sign here)
-</p>
-<br/>
-<br/>
-
-<b>USER MANAGER</b><br/>
-<b>Name: </b><br/>
-<b>Company: </b><br/>
-<b>Date: </b>
+<br/><br/><br/><br/>
+<p class="text-left">1. Please settle any overdue items immediately to avoid an interest charge or discontinuation of supplies to you. If payment has been made, please ignore this reminder.</p>
+<p class="text-left">2. Please contact us immediately if there are any discrepancies in this statement.</p>
+<br/><br/><br/>
+<p class="text-left text-muted">This is a computer-generated statement. No signature is required.</p>

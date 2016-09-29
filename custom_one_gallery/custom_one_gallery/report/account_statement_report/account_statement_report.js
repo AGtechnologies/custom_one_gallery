@@ -4,19 +4,55 @@
 frappe.query_reports["Account Statement Report"] = {
 	"filters": [
 		{
-			"fieldname": "customer",
+			"fieldname":"company",
+			"label": __("Company"),
+			"fieldtype": "Link",
+			"options": "Company",
+			"default": frappe.defaults.get_user_default("Company")
+		},
+		{
+			"fieldname":"customer",
 			"label": __("Customer"),
 			"fieldtype": "Link",
-			"width": "80",
 			"options": "Customer"
 		},
-		
 		{
-			"fieldname":"to_date",
-			"label": __("Date"),
+			"fieldname":"report_date",
+			"label": __("As on Date"),
 			"fieldtype": "Date",
-			"width": "80",
-			"default": frappe.datetime.get_today()
+			"default": get_today()
 		},
+		{
+			"fieldname":"ageing_based_on",
+			"label": __("Ageing Based On"),
+			"fieldtype": "Select",
+			"options": 'Posting Date' + NEWLINE + 'Due Date',
+			"default": "Posting Date"
+		},
+		{
+			"fieldtype": "Break",
+		},
+		{
+			"fieldname":"range1",
+			"label": __("Ageing Range 1"),
+			"fieldtype": "Int",
+			"default": "30",
+			"reqd": 1
+		},
+		{
+			"fieldname":"range2",
+			"label": __("Ageing Range 2"),
+			"fieldtype": "Int",
+			"default": "60",
+			"reqd": 1
+		},
+		{
+			"fieldname":"range3",
+			"label": __("Ageing Range 3"),
+			"fieldtype": "Int",
+			"default": "90",
+			"reqd": 1
+		}
 	]
 }
+

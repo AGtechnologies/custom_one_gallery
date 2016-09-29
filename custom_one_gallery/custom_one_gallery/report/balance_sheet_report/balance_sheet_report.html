@@ -4,6 +4,10 @@
 	}
 %}
 
+<div style="margin-bottom: 7px;" class="text-center">
+	{%= frappe.boot.letter_heads[frappe.defaults.get_default("letter_head")] %}
+</div>
+
 <style>
 	.financial-statements-important td {
 		font-weight: bold;
@@ -12,6 +16,7 @@
 
 	.financial-statements-blank-row td {
 		height: 37px;
+		
 	}
 </style>
 
