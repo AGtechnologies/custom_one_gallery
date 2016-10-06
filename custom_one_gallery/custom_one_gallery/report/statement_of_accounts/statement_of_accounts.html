@@ -1,10 +1,8 @@
-<div style="margin-bottom: 7px;" class="text-center">
+<div style="margin-bottom: 27px;" class="text-center">
 	{%= frappe.boot.letter_heads[frappe.defaults.get_default("letter_head")] %}
 </div>
-<h3 class="text-center">
-	{%= __(" STATEMENT OF ACCOUNTS AS OF") %}
-	{%= dateutil.str_to_user(filters.report_date) %}
-</h3>
+<h3 class="text-center">{%= __(" STATEMENT OF ACCOUNTS AS OF") %}
+	{%= dateutil.str_to_user(filters.report_date) %}</h3>
 <h4 class="text-center">{%= __(" Customer Name: ") %}{%= filters.customer %}, {%= __(" Customer ID: ") %}{%= data[0][__("Customer ID")] %}</h4>
 <h4 class="text-center">{%= __(" Payment Term: ") %}{%= data[0][__("Payment Term")] %}, {%= __(" Currency: ") %}{%= data[0][__("Currency")] %}</h4>
 <hr>
@@ -53,7 +51,6 @@
 	</tbody>
 </table>
 <br/><br/><br/><br/>
-<p class="text-left">1. Please settle any overdue items immediately to avoid an interest charge or discontinuation of supplies to you. If payment has been made, please ignore this reminder.</p>
 <p class="text-left">2. Please contact us immediately if there are any discrepancies in this statement.</p>
 <br/><br/><br/>
 <p class="text-left text-muted">This is a computer-generated statement. No signature is required.</p>

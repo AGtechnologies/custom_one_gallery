@@ -1,0 +1,44 @@
+<div style="margin-bottom: 7px;" class="text-center">
+	{%= frappe.boot.letter_heads[frappe.defaults.get_default("letter_head")] %}
+</div>
+
+
+<h3 class="text-center">
+	{%= __(" Stock Replenishment Listing at Customer Location") %}
+</h3>
+<h3 class="text-center">
+	{%= __("As of: ") %}
+	{%= dateutil.str_to_user(filters.to_date) %}
+	
+</h3>
+<hr>
+<table class="table table-bordered">
+	<thead>
+		<tr>
+			<th style="text-align:center;width:50px;">{%= __("S/No") %}</th>
+			{% for(var i=1, l=report.columns.length; i<l; i++) { %}
+				<th style="text-align:center;width:1000px;">{%= report.columns[i].label %}</th>
+			{% } %}
+			
+		</tr>
+	</thead>
+	<tbody>
+		{% for(var i=0, l=data.length; i<l; i++) { %}
+			<tr>
+				{%
+					var row = data[i];
+				%}
+				
+				{% for(var j=0, k=report.columns.length; j<k; j++) { %}
+					<td style="text-align:center;width:1000px;">
+						{% var fieldname = report.columns[j].field; %}
+						{% if (!is_null(row[fieldname])) { %}
+							{%= row[fieldname] %}
+						{% } %}
+					</td>
+				{% } %}
+			</tr>
+		{% } %}
+	</tbody>
+</table>
+
